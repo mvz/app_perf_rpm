@@ -11,6 +11,7 @@ end
 
 if ::AppPerfRpm.config.instrumentation[:active_record][:enabled] &&
   defined?(::ActiveRecord)
+  ActiveRecord::Base.connection
   AppPerfRpm.logger.info "Initializing activerecord tracer."
 
   if defined?(::ActiveRecord::ConnectionAdapters::SQLite3Adapter)

@@ -15,6 +15,7 @@ if ::AppPerfRpm.config.instrumentation[:active_record][:enabled] &&
   AppPerfRpm.logger.info "Initializing activerecord tracer."
 
   if defined?(::ActiveRecord::ConnectionAdapters::SQLite3Adapter)
+    AppPerfRpm.logger.debug "Overriding SQLite3Adapter"
     require 'app_perf_rpm/instruments/active_record/adapters/sqlite3'
     ::ActiveRecord::ConnectionAdapters::SQLite3Adapter.send(:include,
       ::AppPerfRpm::Instruments::ActiveRecord::Adapters::Sqlite3
@@ -31,9 +32,12 @@ if ::AppPerfRpm.config.instrumentation[:active_record][:enabled] &&
         alias_method :exec_delete, :exec_delete_with_trace
       end
     end
+  else
+    AppPerfRpm.logger.debug "NOT overriding SQLite3Adapter"
   end
 
   if defined?(::ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+    AppPerfRpm.logger.debug "Overriding PostgreSQLAdapter"
     require 'app_perf_rpm/instruments/active_record/adapters/postgresql'
     ::ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.send(:include,
       ::AppPerfRpm::Instruments::ActiveRecord::Adapters::Postgresql
@@ -51,9 +55,12 @@ if ::AppPerfRpm.config.instrumentation[:active_record][:enabled] &&
         alias_method :exec_delete, :exec_delete_with_trace
       end
     end
+  else
+    AppPerfRpm.logger.debug "NOT overriding PostgreSQLAdapter"
   end
 
   if defined?(::ActiveRecord::ConnectionAdapters::Mysql2Adapter)
+    AppPerfRpm.logger.debug "Overriding Mysql2Adapter"
     require 'app_perf_rpm/instruments/active_record/adapters/mysql2'
     ::ActiveRecord::ConnectionAdapters::Mysql2Adapter.send(:include,
       ::AppPerfRpm::Instruments::ActiveRecord::Adapters::Mysql2
@@ -63,5 +70,7 @@ if ::AppPerfRpm.config.instrumentation[:active_record][:enabled] &&
       alias_method :execute_without_trace, :execute
       alias_method :execute, :execute_with_trace
     end
+  else
+    AppPerfRpm.logger.debug "NOT overriding Mysql2Adapter"
   end
 end

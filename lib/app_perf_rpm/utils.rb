@@ -34,12 +34,6 @@ module AppPerfRpm
           span.log(event: "backtrace", stack: backtrace)
         end
       end
-      if config[:source]
-        source = AppPerfRpm::Backtrace.source_extract
-        if source.length > 0
-          span.log(event: "source", stack: source)
-        end
-      end
     end
   end
 end
